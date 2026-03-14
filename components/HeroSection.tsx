@@ -139,10 +139,10 @@ export default function HeroSection() {
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, var(--bg-secondary) 0%, var(--bg-primary) 70%)' }} />
         <div className="absolute left-1/2 top-0 h-[400px] w-[700px] -translate-x-1/2 rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse, var(--accent-gold), transparent)', opacity: 0.05, filter: 'blur(60px)' }} />
         <motion.div animate={prefersReducedMotion ? undefined : { x: [0, 20, 0], y: [0, -14, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }} className="absolute bottom-1/4 right-1/4 h-72 w-72 rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse, var(--accent-blush), transparent)', opacity: 0.07, filter: 'blur(50px)' }} />
-        <motion.div animate={prefersReducedMotion ? undefined : { rotate: [0, 360] }} transition={{ duration: 70, repeat: Infinity, ease: 'linear' }} className="absolute right-8 top-8 h-44 w-44 pointer-events-none opacity-[0.18] dark:opacity-[0.09]">
+        <motion.div animate={prefersReducedMotion ? undefined : { rotate: [0, 360] }} transition={{ duration: 70, repeat: Infinity, ease: 'linear' }} className="absolute right-8 top-8 h-44 w-44 pointer-events-none opacity-[0.14]">
           <MoroccanOrnamentLarge />
         </motion.div>
-        <motion.div animate={prefersReducedMotion ? undefined : { rotate: [360, 0] }} transition={{ duration: 90, repeat: Infinity, ease: 'linear' }} className="absolute bottom-10 left-6 h-32 w-32 pointer-events-none opacity-[0.13] dark:opacity-[0.07]">
+        <motion.div animate={prefersReducedMotion ? undefined : { rotate: [360, 0] }} transition={{ duration: 90, repeat: Infinity, ease: 'linear' }} className="absolute bottom-10 left-6 h-32 w-32 pointer-events-none opacity-[0.1]">
           <MoroccanOrnamentLarge />
         </motion.div>
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, var(--accent-gold) 0.5px, transparent 0.5px)', backgroundSize: '48px 48px', opacity: 0.025 }} />

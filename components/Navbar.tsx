@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Heart } from 'lucide-react'
-import ThemeToggle from './ThemeToggle'
 import { config } from '@/data/wedding-config'
 
 export default function Navbar() {
@@ -85,7 +84,6 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <motion.button
               onClick={() => setMenuOpen((v) => !v)}
               whileTap={{ scale: 0.9 }}

@@ -10,54 +10,30 @@
 
 :root {
   /* Backgrounds */
-  --bg-primary: #FAFAF3;
-  --bg-secondary: #F5EDD9;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --bg-glass: rgba(255, 255, 255, 0.55);
+  --bg-primary: #fcfaf4;
+  --bg-secondary: #f7efe6;
+  --bg-card: rgba(255, 252, 247, 0.9);
+  --bg-glass: rgba(255, 250, 244, 0.76);
 
   /* Text */
-  --text-primary: #1A1814;
-  --text-secondary: #584B3E;
-  --text-muted: #998070;
+  --text-primary: #4f332f;
+  --text-secondary: #6d5c4b;
+  --text-muted: #8f8672;
 
   /* Accents */
-  --accent-gold: #C9A96E;
-  --accent-gold-light: #E8D5A3;
-  --accent-gold-dark: #A8843A;
-  --accent-blush: #E8B4BC;
+  --accent-gold: #b11f26;
+  --accent-gold-light: #df8f97;
+  --accent-gold-dark: #7f1015;
+  --accent-blush: #e8c8c4;
+  --accent-olive: #9aa05d;
+  --accent-olive-dark: #74793f;
 
   /* Borders & Shadows */
-  --border-color: #E0D4C0;
-  --border-gold: rgba(201, 169, 110, 0.28);
-  --shadow-soft: 0 4px 32px rgba(28, 24, 20, 0.06), 0 1px 4px rgba(28, 24, 20, 0.04);
-  --shadow-card: 0 8px 48px rgba(201, 169, 110, 0.1), 0 2px 8px rgba(28, 24, 20, 0.05);
-  --shadow-glow: 0 0 40px rgba(201, 169, 110, 0.15), 0 0 80px rgba(201, 169, 110, 0.08);
-}
-
-.dark {
-  /* Backgrounds */
-  --bg-primary: #070F0C;
-  --bg-secondary: #0E1F17;
-  --bg-card: rgba(14, 31, 23, 0.92);
-  --bg-glass: rgba(13, 25, 18, 0.65);
-
-  /* Text */
-  --text-primary: #F8F4EE;
-  --text-secondary: #C9B99A;
-  --text-muted: #6B8077;
-
-  /* Accents */
-  --accent-gold: #D4A843;
-  --accent-gold-light: #F0C875;
-  --accent-gold-dark: #B88C29;
-  --accent-blush: #C97080;
-
-  /* Borders & Shadows */
-  --border-color: #1A2E22;
-  --border-gold: rgba(212, 168, 67, 0.18);
-  --shadow-soft: 0 4px 32px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.3);
-  --shadow-card: 0 8px 48px rgba(0, 0, 0, 0.5), 0 0 60px rgba(212, 168, 67, 0.06);
-  --shadow-glow: 0 0 60px rgba(212, 168, 67, 0.2), 0 0 120px rgba(212, 168, 67, 0.08);
+  --border-color: #e8ddd1;
+  --border-gold: rgba(177, 31, 38, 0.18);
+  --shadow-soft: 0 14px 40px rgba(115, 63, 52, 0.08), 0 1px 4px rgba(115, 63, 52, 0.04);
+  --shadow-card: 0 22px 65px rgba(177, 31, 38, 0.08), 0 6px 18px rgba(115, 63, 52, 0.06);
+  --shadow-glow: 0 0 35px rgba(177, 31, 38, 0.09), 0 0 70px rgba(154, 160, 93, 0.08);
 }
 
 /* ============================================
@@ -76,7 +52,10 @@ html {
 }
 
 body {
-  background-color: var(--bg-primary);
+  background:
+    radial-gradient(circle at top, rgba(154, 160, 93, 0.08), transparent 28%),
+    radial-gradient(circle at bottom, rgba(177, 31, 38, 0.06), transparent 24%),
+    var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Montserrat', 'Helvetica Neue', system-ui, sans-serif;
   line-height: 1.6;
@@ -113,7 +92,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label {
   background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-gold);
+  background: linear-gradient(180deg, var(--accent-gold), var(--accent-olive));
   border-radius: 4px;
 }
 
@@ -122,8 +101,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label {
    ============================================ */
 
 ::selection {
-  background: var(--accent-gold);
-  color: var(--bg-primary);
+  background: rgba(177, 31, 38, 0.18);
+  color: var(--text-primary);
 }
 
 /* ============================================
@@ -142,7 +121,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label {
 
 @layer utilities {
   .text-gradient-gold {
-    background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 40%, var(--accent-gold-light) 60%, var(--accent-gold) 80%, var(--accent-gold-dark) 100%);
+    background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 38%, var(--accent-olive) 62%, var(--accent-gold) 82%, var(--accent-gold-dark) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
