@@ -9,6 +9,7 @@ interface RSVPEntry {
   name: string
   phone: string
   guest_count: number
+  message: string
   created_at: string
 }
 
@@ -93,9 +94,9 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   }
 
   const handleExportCSV = () => {
-    const header = 'Nom,Téléphone,Accompagnants,Date\n'
+    const header = 'Nom,Téléphone,Accompagnants,Message,Date\n'
     const rows = filtered
-      .map((e) => `"${e.name}","${e.phone}",${e.guest_count},"${new Date(e.created_at).toLocaleString('fr-FR')}"`)
+      .map((e) => `"${e.name}","${e.phone}",${e.guest_count},"${e.message.replace(/"/g, '""')}","${new Date(e.created_at).toLocaleString('fr-FR')}"`)
       .join('\n')
     const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
@@ -244,6 +245,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     <th className="text-left px-6 py-4 font-sans text-[10px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>Nom</th>
                     <th className="text-left px-6 py-4 font-sans text-[10px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>Téléphone</th>
                     <th className="text-center px-6 py-4 font-sans text-[10px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>Accompagnants</th>
+                    <th className="text-left px-6 py-4 font-sans text-[10px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>Message</th>
                     <th className="text-left px-6 py-4 font-sans text-[10px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-muted)' }}>Date</th>
                     <th className="w-12 px-4 py-4"></th>
                   </tr>
@@ -267,6 +269,9 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full font-sans text-sm font-medium" style={{ background: 'rgba(201,169,110,0.12)', color: 'var(--accent-gold)' }}>
                             {entry.guest_count}
                           </span>
+                        </td>
+                        <td className="px-6 py-4 font-sans text-sm max-w-xs" style={{ color: 'var(--text-secondary)' }}>
+                          {entry.message || 'Aucun message'}
                         </td>
                         <td className="px-6 py-4 font-sans text-xs" style={{ color: 'var(--text-muted)' }}>
                           {new Date(entry.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}

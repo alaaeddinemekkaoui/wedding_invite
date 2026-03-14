@@ -63,7 +63,7 @@ export interface RSVPRow {
   name: string
   phone: string
   guest_count: number
-  message: string | null
+  message: string
   created_at: string
 }
 
@@ -75,9 +75,10 @@ export async function insertRSVP(
 ): Promise<RSVPRow> {
   await ensureDatabaseSchema()
   const sql = getDb()
+  const sanitizedMessage = message?.trim() ?? ''
   const rows = await sql`
     INSERT INTO rsvp (name, phone, guest_count, message)
-    VALUES (${name}, ${phone}, ${guestCount}, ${message || null})
+    VALUES (${name}, ${phone}, ${guestCount}, ${sanitizedMessage})
     RETURNING id, name, phone, guest_count, message, created_at
   `
   return rows[0] as RSVPRow
@@ -87,7 +88,7 @@ export async function getAllRSVPs(): Promise<RSVPRow[]> {
   await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
-    SELECT id, name, phone, guest_count, message, created_at
+    SELECT id, name, phone, guest_count, COALESCE(message, '') AS message, created_at
     FROM rsvp
     ORDER BY created_at DESC
   `
