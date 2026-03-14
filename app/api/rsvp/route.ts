@@ -21,8 +21,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, data: row }, { status: 201 })
   } catch (error) {
     console.error('RSVP POST error:', error)
+
+    const message =
+      error instanceof Error && error.message.includes('DATABASE_URL')
+        ? 'Configuration base de donnees manquante sur le serveur.'
+        : 'Erreur serveur. Veuillez reessayer.'
+
     return NextResponse.json(
-      { success: false, errors: [{ field: 'server', message: 'Erreur serveur. Veuillez réessayer.' }] },
+      { success: false, errors: [{ field: 'server', message }] },
       { status: 500 }
     )
   }
@@ -33,7 +39,7 @@ export async function GET() {
     const authed = await isAuthenticated()
     if (!authed) {
       return NextResponse.json(
-        { success: false, message: 'Non autorisé' },
+        { success: false, message: 'Non autorise' },
         { status: 401 }
       )
     }
@@ -42,8 +48,14 @@ export async function GET() {
     return NextResponse.json({ success: true, data: rsvps })
   } catch (error) {
     console.error('RSVP GET error:', error)
+
+    const message =
+      error instanceof Error && error.message.includes('DATABASE_URL')
+        ? 'Configuration base de donnees manquante sur le serveur.'
+        : 'Erreur serveur'
+
     return NextResponse.json(
-      { success: false, message: 'Erreur serveur' },
+      { success: false, message },
       { status: 500 }
     )
   }

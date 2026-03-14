@@ -1,5 +1,7 @@
 import { neon } from '@neondatabase/serverless'
 
+let schemaReadyPromise: Promise<void> | null = null
+
 function getDbUrl(): string {
   const url = process.env.DATABASE_URL
   if (!url) {
@@ -15,21 +17,39 @@ export function getDb() {
   return neon(getDbUrl())
 }
 
+async function ensureDatabaseSchema() {
+  if (!schemaReadyPromise) {
+    const sql = getDb()
+    schemaReadyPromise = (async () => {
+      await sql`
+        CREATE TABLE IF NOT EXISTS rsvp (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(200) NOT NULL,
+          phone VARCHAR(30) NOT NULL,
+          guest_count INTEGER NOT NULL DEFAULT 0,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+      `
+
+      await sql`
+        CREATE INDEX IF NOT EXISTS idx_rsvp_created_at ON rsvp (created_at DESC)
+      `
+
+      await sql`
+        CREATE INDEX IF NOT EXISTS idx_rsvp_name ON rsvp (name)
+      `
+    })()
+  }
+
+  await schemaReadyPromise
+}
+
 /**
  * Initialize the database schema.
  * Call this once during setup or use the SQL in schema/init.sql manually.
  */
 export async function initializeDatabase() {
-  const sql = getDb()
-  await sql`
-    CREATE TABLE IF NOT EXISTS rsvp (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(200) NOT NULL,
-      phone VARCHAR(30) NOT NULL,
-      guest_count INTEGER NOT NULL DEFAULT 0,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `
+  await ensureDatabaseSchema()
 }
 
 export interface RSVPRow {
@@ -45,6 +65,7 @@ export async function insertRSVP(
   phone: string,
   guestCount: number
 ): Promise<RSVPRow> {
+  await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
     INSERT INTO rsvp (name, phone, guest_count)
@@ -55,6 +76,7 @@ export async function insertRSVP(
 }
 
 export async function getAllRSVPs(): Promise<RSVPRow[]> {
+  await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
     SELECT id, name, phone, guest_count, created_at
@@ -65,6 +87,7 @@ export async function getAllRSVPs(): Promise<RSVPRow[]> {
 }
 
 export async function deleteRSVP(id: number): Promise<boolean> {
+  await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
     DELETE FROM rsvp WHERE id = ${id} RETURNING id
@@ -76,6 +99,7 @@ export async function getRSVPStats(): Promise<{
   total_confirmations: number
   total_guests: number
 }> {
+  await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
     SELECT
