@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { config } from '../data/config'
 
 function MoroccanStar({ size = 56 }) {
   return (
@@ -64,7 +65,7 @@ export default function Preloader() {
         transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className="font-script name-safe text-5xl text-gradient-gold mb-2 select-none"
       >
-        Ghita × Walid
+        {config.couple.combined}
       </motion.p>
 
       {/* Date & venue */}

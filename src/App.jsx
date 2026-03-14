@@ -10,7 +10,6 @@ import LocationSection from './components/LocationSection'
 import WelcomeMessage from './components/WelcomeMessage'
 import FooterSection from './components/FooterSection'
 import DecorativeDivider from './components/DecorativeDivider'
-import MusicToggle from './components/MusicToggle'
 import EnvelopeIntro from './components/EnvelopeIntro'
 
 function App() {
@@ -67,7 +66,6 @@ function App() {
             <WelcomeMessage />
           </main>
           <FooterSection />
-          <MusicToggle />
         </>
       )}
     </>

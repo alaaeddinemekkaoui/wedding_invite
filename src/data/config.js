@@ -10,7 +10,7 @@ export const config = {
   couple: {
     name1: 'Ghita',
     name2: 'Walid',
-    combined: 'Ghita × Walid',
+    combined: 'Ghita ♡ Walid',
   },
 
   /* ─────────────── WEDDING ─────────────── */
@@ -142,12 +142,25 @@ export const config = {
     // with a fetch() call to your Formspree endpoint, EmailJS, or custom API.
   },
 
+  /* ─────────────── MUSIQUE ─────────────── */
+  music: {
+    title: 'Ambiance musicale',
+    description: 'Ajoutez votre morceau romantique pour accompagner l\'invitation.',
+    buttonPlay: 'Lancer la musique',
+    buttonPause: 'Mettre en pause',
+    missingMessage: 'Ajoutez un fichier audio dans public/music/wedding-theme.mp3 pour activer la lecture.',
+    // Place your track at public/music/wedding-theme.mp3
+    src: '/music/wedding-theme.mp3',
+    volume: 0.45,
+    loop: true,
+  },
+
   /* ─────────────── FOOTER ─────────────── */
   footer: {
     closing: 'Votre présence rendra cette journée encore plus spéciale.',
     thankYou: 'Merci de partager ce moment unique avec nous.',
     rsvpCta: 'Confirmer votre présence',
-    copyright: '© 2026 Ghita × Walid. Avec amour.',
+    copyright: '© 2026 Ghita ♡ Walid. Avec amour.',
   },
 
   /* ─────────────── NAVBAR ─────────────── */

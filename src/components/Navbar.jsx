@@ -62,7 +62,7 @@ export default function Navbar({ theme, toggleTheme }) {
             onClick={(e) => handleLink(e, '#accueil')}
             whileHover={{ scale: 1.04 }}
             className="inline-flex min-h-[2.5rem] items-center justify-center px-1.5 py-1 font-script leading-[1.15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded"
-            aria-label="Accueil — Ghita × Walid"
+            aria-label="Accueil — Ghita ♡ Walid"
             style={{
               color: 'var(--accent-gold)',
               textShadow: '0 2px 12px rgba(201, 169, 110, 0.12)',

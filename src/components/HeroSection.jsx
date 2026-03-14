@@ -124,7 +124,7 @@ function MobileHeartSeparator({ animated }) {
 }
 
 function AnimatedCoupleNames({ name1, name2, prefersReducedMotion, shouldAnimate }) {
-  const fullText = `${name1} × ${name2}`
+  const fullText = `${name1} ♡ ${name2}`
   const desktopStyle = { fontSize: 'clamp(2.7rem, 10vw, 11rem)' }
   const mobileStyle = { fontSize: 'clamp(3.4rem, 16vw, 5rem)' }
   const titleToneClass = 'text-[var(--accent-gold)] [text-shadow:0_2px_18px_rgba(201,169,110,0.12)]'
