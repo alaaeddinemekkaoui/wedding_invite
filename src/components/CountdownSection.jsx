@@ -85,8 +85,39 @@ function CountdownCard({ value, label, delay }) {
 }
 
 export default function CountdownSection() {
+  const layoutRef = useRef(null)
+  const [hideSeconds, setHideSeconds] = useState(false)
   const { countdown, wedding } = config
   const { days, hours, minutes, seconds, isPast } = useCountdown(wedding.dateISO)
+
+  useEffect(() => {
+    const updateLayout = () => {
+      const availableWidth = layoutRef.current?.clientWidth ?? window.innerWidth
+      setHideSeconds(availableWidth < 430)
+    }
+
+    updateLayout()
+
+    let resizeObserver
+    if (typeof ResizeObserver !== 'undefined' && layoutRef.current) {
+      resizeObserver = new ResizeObserver(updateLayout)
+      resizeObserver.observe(layoutRef.current)
+    }
+
+    window.addEventListener('resize', updateLayout)
+
+    return () => {
+      resizeObserver?.disconnect()
+      window.removeEventListener('resize', updateLayout)
+    }
+  }, [])
+
+  const countdownItems = [
+    { value: days, label: countdown.labels.days, delay: 0 },
+    { value: hours, label: countdown.labels.hours, delay: 0.08 },
+    { value: minutes, label: countdown.labels.minutes, delay: 0.16 },
+    ...(hideSeconds ? [] : [{ value: seconds, label: countdown.labels.seconds, delay: 0.24 }]),
+  ]
 
   return (
     <section
@@ -104,7 +135,7 @@ export default function CountdownSection() {
         }}
       />
 
-      <div className="max-w-4xl mx-auto text-center relative z-10">
+      <div ref={layoutRef} className="max-w-4xl mx-auto text-center relative z-10">
         {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -137,51 +168,31 @@ export default function CountdownSection() {
             Le grand jour est arrivé !
           </motion.p>
         ) : (
-          <div className="flex items-start justify-center gap-4 sm:gap-6 md:gap-8">
-            <CountdownCard value={days} label={countdown.labels.days} delay={0} />
+          <div className="flex items-start justify-center gap-3 sm:gap-6 md:gap-8">
+            {countdownItems.map((item, index) => (
+              <div key={item.label} className="flex items-start gap-3 sm:gap-6 md:gap-8">
+                <CountdownCard value={item.value} label={item.label} delay={item.delay} />
 
-            {/* Colon separator */}
-            <div className="flex flex-col items-center justify-center h-24 sm:h-28 md:h-32 pb-6">
-              <motion.span
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-                className="font-serif text-3xl md:text-4xl leading-none"
-                style={{ color: 'var(--accent-gold)' }}
-                aria-hidden="true"
-              >
-                :
-              </motion.span>
-            </div>
-
-            <CountdownCard value={hours} label={countdown.labels.hours} delay={0.08} />
-
-            <div className="flex flex-col items-center justify-center h-24 sm:h-28 md:h-32 pb-6">
-              <motion.span
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                className="font-serif text-3xl md:text-4xl leading-none"
-                style={{ color: 'var(--accent-gold)' }}
-                aria-hidden="true"
-              >
-                :
-              </motion.span>
-            </div>
-
-            <CountdownCard value={minutes} label={countdown.labels.minutes} delay={0.16} />
-
-            <div className="flex flex-col items-center justify-center h-24 sm:h-28 md:h-32 pb-6">
-              <motion.span
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut', delay: 0.25 }}
-                className="font-serif text-3xl md:text-4xl leading-none"
-                style={{ color: 'var(--accent-gold)' }}
-                aria-hidden="true"
-              >
-                :
-              </motion.span>
-            </div>
-
-            <CountdownCard value={seconds} label={countdown.labels.seconds} delay={0.24} />
+                {index < countdownItems.length - 1 ? (
+                  <div className="flex flex-col items-center justify-center h-24 sm:h-28 md:h-32 pb-6">
+                    <motion.span
+                      animate={{ opacity: [1, 0.2, 1] }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.2,
+                      }}
+                      className="font-serif text-2xl sm:text-3xl md:text-4xl leading-none"
+                      style={{ color: 'var(--accent-gold)' }}
+                      aria-hidden="true"
+                    >
+                      :
+                    </motion.span>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         )}
 
