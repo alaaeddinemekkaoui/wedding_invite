@@ -155,7 +155,7 @@ export default function HeroSection() {
           {/* Main title */}
           <motion.h1
             variants={itemVariants}
-            className="font-script leading-[1.1] px-2 mb-8 text-gradient-gold"
+            className="font-script name-safe leading-[1.12] px-3 mb-8 text-gradient-gold"
             style={{ fontSize: 'clamp(4rem, 15vw, 11rem)' }}
           >
             {config.couple.name1} × {config.couple.name2}

@@ -62,7 +62,7 @@ export default function Preloader() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="font-script text-5xl text-gradient-gold mb-2 select-none"
+        className="font-script name-safe text-5xl text-gradient-gold mb-2 select-none"
       >
         Ghita × Walid
       </motion.p>

@@ -139,7 +139,7 @@ export default function WelcomeMessage() {
             <p className="font-sans text-[10px] tracking-[0.35em] uppercase" style={{ color: 'var(--text-muted)' }}>
               Avec tout notre amour,
             </p>
-            <p className="font-script text-5xl text-gradient-gold leading-none">
+            <p className="font-script name-safe text-5xl text-gradient-gold leading-[1.14]">
               {config.couple.combined}
             </p>
             <p

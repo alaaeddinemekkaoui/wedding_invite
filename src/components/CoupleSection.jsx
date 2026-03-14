@@ -55,7 +55,7 @@ function PersonCard({ label, name, bio, gradient }) {
             {label}
           </span>
 
-          <h3 className="font-script text-6xl text-gradient-gold leading-none mb-5">{name}</h3>
+          <h3 className="font-script name-safe text-6xl text-gradient-gold leading-[1.14] mb-5">{name}</h3>
 
           <div
             className="h-[1px] w-16 mb-5"

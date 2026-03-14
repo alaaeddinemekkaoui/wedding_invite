@@ -60,7 +60,7 @@ export default function FooterSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="font-script leading-none mb-6 text-gradient-gold"
+            className="font-script name-safe leading-[1.14] mb-6 text-gradient-gold"
             style={{ fontSize: 'clamp(3rem, 10vw, 7rem)' }}
           >
             {couple.combined}

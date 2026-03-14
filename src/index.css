@@ -86,6 +86,25 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+/* Prevent font edge clipping across browsers */
+h1, h2, h3, h4, h5, h6, p, span, a, button, label {
+  overflow: visible;
+  text-rendering: optimizeLegibility;
+}
+
+/* Extra safety for decorative script glyph flourishes */
+.font-script {
+  line-height: 1.14;
+  padding-inline: 0.05em;
+}
+
+/* Extra room specifically for couple name renderings */
+.name-safe {
+  display: inline-block;
+  line-height: 1.18;
+  padding-inline: 0.12em;
+}
+
 /* ============================================
    SCROLLBAR
    ============================================ */

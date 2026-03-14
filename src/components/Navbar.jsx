@@ -165,4 +165,9 @@ export default function Navbar({ theme, toggleTheme }) {
                 style={{ background: 'linear-gradient(90deg, var(--accent-gold), transparent)', opacity: 0.4 }}
               />
             </div>
-          </motion.d
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
