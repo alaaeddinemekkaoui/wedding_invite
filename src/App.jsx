@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useTheme } from './hooks/useTheme'
-import Preloader from './components/Preloader'
 import ScrollProgress from './components/ScrollProgress'
 import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
-import CoupleSection from './components/CoupleSection'
 import DetailsSection from './components/DetailsSection'
 import CountdownSection from './components/CountdownSection'
 import LocationSection from './components/LocationSection'
@@ -13,30 +11,52 @@ import WelcomeMessage from './components/WelcomeMessage'
 import FooterSection from './components/FooterSection'
 import DecorativeDivider from './components/DecorativeDivider'
 import MusicToggle from './components/MusicToggle'
+import EnvelopeIntro from './components/EnvelopeIntro'
 
 function App() {
   const { theme, toggleTheme } = useTheme()
-  const [loading, setLoading] = useState(true)
+  const [invitationOpened, setInvitationOpened] = useState(false)
+  const [startSection, setStartSection] = useState(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2400)
-    return () => clearTimeout(timer)
-  }, [])
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = invitationOpened ? '' : 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [invitationOpened])
+
+  useEffect(() => {
+    if (!invitationOpened || !startSection) return
+
+    const timer = window.setTimeout(() => {
+      document.getElementById(startSection)?.scrollIntoView({ behavior: 'auto' })
+    }, 80)
+
+    return () => window.clearTimeout(timer)
+  }, [invitationOpened, startSection])
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {loading && <Preloader key="preloader" />}
+        {!invitationOpened && (
+          <EnvelopeIntro
+            key="envelope-intro"
+            onOpen={() => {
+              setInvitationOpened(true)
+              setStartSection('accueil')
+            }}
+          />
+        )}
       </AnimatePresence>
 
-      {!loading && (
+      {invitationOpened && (
         <>
           <ScrollProgress />
           <Navbar theme={theme} toggleTheme={toggleTheme} />
           <main>
             <HeroSection />
-            <DecorativeDivider />
-            <CoupleSection />
             <DecorativeDivider />
             <DetailsSection />
             <DecorativeDivider />

@@ -16,7 +16,7 @@ export default function WelcomeMessage() {
   return (
     <section
       id="bienvenue"
-      className="section-padding px-6 relative overflow-hidden"
+      className="section-padding section-stage px-6 relative overflow-hidden"
       aria-labelledby="welcome-heading"
     >
       {/* Soft background glow */}

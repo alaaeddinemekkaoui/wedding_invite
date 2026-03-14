@@ -113,7 +113,7 @@ export default function LocationSection() {
   const { location } = config
 
   return (
-    <section id="lieu" className="section-padding px-6" aria-labelledby="location-heading">
+    <section id="lieu" className="section-padding section-stage px-6" aria-labelledby="location-heading">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <motion.div

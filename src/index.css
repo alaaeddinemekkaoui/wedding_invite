@@ -170,14 +170,26 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label {
   }
 
   .section-padding {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    scroll-margin-top: 5.75rem;
+  }
+
+  .section-stage {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
   }
 
   @media (min-width: 768px) {
     .section-padding {
-      padding-top: 8rem;
-      padding-bottom: 8rem;
+      padding-top: 9rem;
+      padding-bottom: 9rem;
+      scroll-margin-top: 6.25rem;
+    }
+
+    .section-stage {
+      min-height: 100svh;
     }
   }
 }

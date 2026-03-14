@@ -91,7 +91,7 @@ export default function CountdownSection() {
   return (
     <section
       id="countdown"
-      className="section-padding px-6 relative overflow-hidden"
+      className="section-padding section-stage px-6 relative overflow-hidden"
       aria-labelledby="countdown-heading"
     >
       {/* Background glow */}

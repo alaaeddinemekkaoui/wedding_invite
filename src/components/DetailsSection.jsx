@@ -100,7 +100,7 @@ export default function DetailsSection() {
   const { details } = config
 
   return (
-    <section id="details" className="section-padding px-6" aria-labelledby="details-heading">
+    <section id="details" className="section-padding section-stage px-6" aria-labelledby="details-heading">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <motion.div
