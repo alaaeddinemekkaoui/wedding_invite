@@ -42,7 +42,7 @@ export default function FooterSection() {
           backgroundOpacity: 0.04,
         }}
       >
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           {/* Star ornament */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
@@ -55,16 +55,20 @@ export default function FooterSection() {
           </motion.div>
 
           {/* Couple names */}
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="font-script name-safe leading-[1.14] mb-6 text-gradient-gold"
-            style={{ fontSize: 'clamp(3rem, 10vw, 7rem)' }}
+            className="mx-auto w-full max-w-5xl px-2 py-7 sm:px-10 sm:py-8"
           >
-            {couple.combined}
-          </motion.h2>
+            <h2
+              className="font-script name-safe whitespace-nowrap text-gradient-gold leading-[1.2]"
+              style={{ fontSize: 'clamp(2.2rem, 10vw, 5rem)' }}
+            >
+              {couple.combined}
+            </h2>
+          </motion.div>
 
           {/* Date & venue */}
           <motion.div
@@ -72,7 +76,7 @@ export default function FooterSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="flex items-center justify-center gap-4 mb-10"
+            className="mb-10 flex items-center justify-center gap-4 px-4 sm:px-8"
           >
             <span
               className="h-[1px] w-14"

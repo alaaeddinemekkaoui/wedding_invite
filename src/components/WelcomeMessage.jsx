@@ -59,7 +59,7 @@ export default function WelcomeMessage() {
         </svg>
       </motion.div>
 
-      <div className="max-w-3xl mx-auto text-center relative z-10">
+      <div className="max-w-5xl mx-auto text-center relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -135,15 +135,21 @@ export default function WelcomeMessage() {
           </motion.div>
 
           {/* Signature */}
-          <motion.div variants={itemVariants} className="flex flex-col items-center gap-3">
+          <motion.div
+            variants={itemVariants}
+            className="mx-auto mt-4 flex w-full max-w-5xl flex-col items-center gap-5 px-2 py-9 sm:mt-6 sm:px-10 sm:py-10"
+          >
             <p className="font-sans text-[10px] tracking-[0.35em] uppercase" style={{ color: 'var(--text-muted)' }}>
               Avec tout notre amour,
             </p>
-            <p className="font-script name-safe text-5xl text-gradient-gold leading-[1.14]">
+            <p
+              className="font-script name-safe whitespace-nowrap text-gradient-gold leading-[1.2]"
+              style={{ fontSize: 'clamp(2rem, 10vw, 4.25rem)' }}
+            >
               {config.couple.combined}
             </p>
             <p
-              className="font-sans text-[10px] tracking-[0.3em] uppercase mt-1"
+              className="mt-3 font-sans text-[10px] tracking-[0.3em] uppercase"
               style={{ color: 'var(--text-muted)' }}
             >
               {config.wedding.date} · {config.wedding.fullVenue}
