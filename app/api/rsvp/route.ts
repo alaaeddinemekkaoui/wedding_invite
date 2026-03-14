@@ -15,7 +15,8 @@ export async function POST(request: NextRequest) {
     const row = await insertRSVP(
       sanitized.name,
       sanitized.phone,
-      sanitized.guest_count
+      sanitized.guest_count,
+      sanitized.message
     )
 
     return NextResponse.json({ success: true, data: row }, { status: 201 })

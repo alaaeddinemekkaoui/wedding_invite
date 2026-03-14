@@ -2,6 +2,7 @@ export interface RSVPInput {
   name: string
   phone: string
   guest_count: number
+  message?: string
 }
 
 export interface ValidationError {
@@ -55,6 +56,11 @@ export function validateRSVP(data: unknown): {
     errors.push({ field: 'guest_count', message: 'Maximum 50 accompagnants' })
   }
 
+  const message = typeof body.message === 'string' ? body.message.trim() : ''
+  if (message.length > 1000) {
+    errors.push({ field: 'message', message: 'Le message est trop long' })
+  }
+
   if (errors.length > 0) {
     return { valid: false, errors }
   }
@@ -66,6 +72,7 @@ export function validateRSVP(data: unknown): {
       name: name.replace(/[<>]/g, ''),
       phone: phone.replace(/[<>]/g, ''),
       guest_count: guestCount,
+      message: message.replace(/[<>]/g, ''),
     },
   }
 }

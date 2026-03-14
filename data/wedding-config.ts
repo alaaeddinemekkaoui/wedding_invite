@@ -2,13 +2,14 @@ export const config = {
   couple: {
     name1: 'Ghita',
     name2: 'Walid',
-    combined: 'Ghita <3 Walid',
+    combined: 'Ghita ♡ Walid',
   },
 
   wedding: {
     date: '17 Avril',
     year: '2026',
-    dateISO: '2026-04-17T18:00:00',
+    dateISO: '2026-04-17T16:30:00',
+    time: '16H30',
     venue: 'Salle Dar Bassidi',
     city: 'Fes',
     fullVenue: 'Salle Dar Bassidi, Fes',
@@ -57,24 +58,9 @@ export const config = {
     heading: 'Deroulement de la Soiree',
     items: [
       {
-        time: '18:00',
-        event: 'Accueil des Invites',
-        description: 'Bienvenue dans notre celebration avec cocktail de bienvenue',
-      },
-      {
-        time: '19:00',
+        time: '16H30',
         event: 'Debut de la Ceremonie',
-        description: "L'union solennelle et emouvante de deux ames",
-      },
-      {
-        time: '20:30',
-        event: 'Diner et Celebration',
-        description: 'Un festin somptueux dans une ambiance feutree',
-      },
-      {
-        time: '22:00',
-        event: 'Soiree Festive',
-        description: "Musique, danse et joie jusqu'aux premieres heures",
+        description: "L'union solennelle et emouvante de deux ames.",
       },
     ],
   },
@@ -98,9 +84,10 @@ export const config = {
       name: 'Votre nom',
       phone: 'Votre numero de telephone',
       guests: 'Nombre de personnes qui vous accompagneront',
+      message: 'Message pour les maries (optionnel)',
     },
     message:
-      'Priere de nous confirmer votre presence avant le 10 avril, cela nous aidera a bien organiser cette journee.',
+      '🌺Prière de nous confirmer votre présence avant le 10 avril, cela nous aidera à bien organiser cette journée.🌺',
     submitLabel: 'Confirmer ma presence',
     submittingLabel: 'Envoi en cours...',
     successHeading: 'Merci !',
@@ -111,7 +98,7 @@ export const config = {
     closing: 'Votre presence rendra cette journee encore plus speciale.',
     thankYou: 'Merci de partager ce moment unique avec nous.',
     rsvpCta: 'Confirmer votre presence',
-    copyright: '© 2026 Ghita <3 Walid. Avec amour.',
+    copyright: '© 2026 Ghita ♡ Walid. Avec amour.',
   },
 
   navbar: {

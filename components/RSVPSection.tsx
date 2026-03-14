@@ -9,22 +9,28 @@ interface FormData {
   name: string
   phone: string
   guest_count: string
+  message: string
 }
 
 interface FormErrors {
   name?: string
   phone?: string
   guest_count?: string
+  message?: string
 }
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="font-sans text-[10px] tracking-[0.36em] uppercase" style={{ color: error ? 'var(--accent-blush)' : 'var(--text-muted)' }}>{label}</label>
+      <label className="font-sans text-[10px] tracking-[0.36em] uppercase" style={{ color: error ? 'var(--accent-blush)' : 'var(--text-muted)' }}>
+        {label}
+      </label>
       {children}
       <AnimatePresence>
         {error && (
-          <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="font-sans text-xs" role="alert" style={{ color: 'var(--accent-blush)' }}>{error}</motion.p>
+          <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="font-sans text-xs" role="alert" style={{ color: 'var(--accent-blush)' }}>
+            {error}
+          </motion.p>
         )}
       </AnimatePresence>
     </div>
@@ -46,13 +52,33 @@ const inputStyle: React.CSSProperties = {
 
 function StyledInput({ hasError, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { hasError?: boolean }) {
   const [focused, setFocused] = useState(false)
+
   return (
     <input
       {...props}
       style={{
         ...inputStyle,
         borderColor: hasError ? 'var(--accent-blush)' : focused ? 'var(--accent-gold)' : 'var(--border-color)',
-        boxShadow: focused ? '0 0 0 3px rgba(201, 169, 110, 0.12)' : 'none',
+        boxShadow: focused ? '0 0 0 3px rgba(177, 31, 38, 0.1)' : 'none',
+      }}
+      onFocus={(e) => { setFocused(true); props.onFocus?.(e) }}
+      onBlur={(e) => { setFocused(false); props.onBlur?.(e) }}
+    />
+  )
+}
+
+function StyledTextarea({ hasError, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { hasError?: boolean }) {
+  const [focused, setFocused] = useState(false)
+
+  return (
+    <textarea
+      {...props}
+      style={{
+        ...inputStyle,
+        minHeight: '120px',
+        resize: 'vertical',
+        borderColor: hasError ? 'var(--accent-blush)' : focused ? 'var(--accent-gold)' : 'var(--border-color)',
+        boxShadow: focused ? '0 0 0 3px rgba(177, 31, 38, 0.1)' : 'none',
       }}
       onFocus={(e) => { setFocused(true); props.onFocus?.(e) }}
       onBlur={(e) => { setFocused(false); props.onBlur?.(e) }}
@@ -62,6 +88,7 @@ function StyledInput({ hasError, ...props }: React.InputHTMLAttributes<HTMLInput
 
 function SuccessState() {
   const { rsvp, couple } = config
+
   return (
     <motion.div initial={{ opacity: 0, scale: 0.92, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col items-center text-center py-12 px-8 gap-6" role="status" aria-live="polite">
       <motion.div initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: 0.2, duration: 0.6, type: 'spring', bounce: 0.5 }}>
@@ -82,7 +109,7 @@ function SuccessState() {
 
 export default function RSVPSection() {
   const { rsvp } = config
-  const [form, setForm] = useState<FormData>({ name: '', phone: '', guest_count: '0' })
+  const [form, setForm] = useState<FormData>({ name: '', phone: '', guest_count: '0', message: '' })
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -90,20 +117,23 @@ export default function RSVPSection() {
 
   const validate = (): FormErrors => {
     const next: FormErrors = {}
+
     if (!form.name.trim()) next.name = 'Veuillez entrer votre nom'
     else if (form.name.trim().length < 2) next.name = 'Nom trop court'
 
-    if (!form.phone.trim()) next.phone = 'Veuillez entrer votre numéro de téléphone'
-    else if (!/^[+\d\s\-()]{7,}$/.test(form.phone.trim())) next.phone = 'Numéro de téléphone invalide'
+    if (!form.phone.trim()) next.phone = 'Veuillez entrer votre numero de telephone'
+    else if (!/^[+\d\s\-()]{7,}$/.test(form.phone.trim())) next.phone = 'Numero de telephone invalide'
 
-    const g = parseInt(form.guest_count, 10)
-    if (isNaN(g) || g < 0) next.guest_count = 'Nombre invalide'
-    else if (g > 50) next.guest_count = 'Maximum 50 accompagnants'
+    const guestCount = parseInt(form.guest_count, 10)
+    if (isNaN(guestCount) || guestCount < 0) next.guest_count = 'Nombre invalide'
+    else if (guestCount > 50) next.guest_count = 'Maximum 50 accompagnants'
+
+    if (form.message.trim().length > 1000) next.message = 'Le message est trop long'
 
     return next
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
     if (errors[name as keyof FormErrors]) setErrors((prev) => ({ ...prev, [name]: undefined }))
@@ -113,6 +143,7 @@ export default function RSVPSection() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const validationErrors = validate()
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       const firstKey = Object.keys(validationErrors)[0]
@@ -131,19 +162,20 @@ export default function RSVPSection() {
           name: form.name.trim(),
           phone: form.phone.trim(),
           guest_count: parseInt(form.guest_count, 10),
+          message: form.message.trim(),
         }),
       })
       const data = await res.json()
 
       if (!res.ok || !data.success) {
-        const msg = data.errors?.[0]?.message || 'Une erreur est survenue. Veuillez réessayer.'
+        const msg = data.errors?.[0]?.message || 'Une erreur est survenue. Veuillez reessayer.'
         setServerError(msg)
         return
       }
 
       setSubmitted(true)
     } catch {
-      setServerError('Erreur de connexion. Veuillez réessayer.')
+      setServerError('Erreur de connexion. Veuillez reessayer.')
     } finally {
       setSubmitting(false)
     }
@@ -158,7 +190,6 @@ export default function RSVPSection() {
           <p className="font-serif italic text-lg" style={{ color: 'var(--text-secondary)' }}>{rsvp.subtitle}</p>
         </motion.div>
 
-        {/* RSVP Message */}
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ delay: 0.05, duration: 0.7 }} className="text-center mb-8">
           <p className="font-serif italic text-base leading-relaxed" style={{ color: 'var(--accent-gold)' }}>{rsvp.message}</p>
         </motion.div>
@@ -168,7 +199,7 @@ export default function RSVPSection() {
             {submitted ? (
               <SuccessState key="success" />
             ) : (
-              <motion.form key="form" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.3 }} onSubmit={handleSubmit} noValidate className="p-8 md:p-10 flex flex-col gap-6" aria-label="Formulaire de confirmation de présence">
+              <motion.form key="form" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.3 }} onSubmit={handleSubmit} noValidate className="p-8 md:p-10 flex flex-col gap-6" aria-label="Formulaire de confirmation de presence">
                 <div className="h-[2px] -mx-8 md:-mx-10 -mt-8 md:-mt-10 mb-2" style={{ background: 'linear-gradient(90deg, transparent, var(--accent-gold), var(--accent-gold-light), var(--accent-gold), transparent)' }} aria-hidden="true" />
 
                 <Field label={rsvp.fields.name} error={errors.name}>
@@ -183,11 +214,23 @@ export default function RSVPSection() {
                   <StyledInput id="rsvp-guest_count" type="number" name="guest_count" value={form.guest_count} onChange={handleChange} min="0" max="50" hasError={!!errors.guest_count} aria-required="true" aria-invalid={!!errors.guest_count} />
                 </Field>
 
+                <Field label={rsvp.fields.message} error={errors.message}>
+                  <StyledTextarea
+                    id="rsvp-message"
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    placeholder="Laissez un petit mot aux maries..."
+                    hasError={!!errors.message}
+                    aria-invalid={!!errors.message}
+                  />
+                </Field>
+
                 {serverError && (
                   <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm text-center" role="alert" style={{ color: 'var(--accent-blush)' }}>{serverError}</motion.p>
                 )}
 
-                <motion.button type="submit" disabled={submitting} whileHover={!submitting ? { scale: 1.03, y: -2, boxShadow: '0 14px 40px rgba(201,169,110,0.35)' } : {}} whileTap={!submitting ? { scale: 0.97 } : {}} className="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-sans text-[11px] tracking-[0.26em] uppercase font-medium transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--accent-gold)]" style={{ background: 'var(--accent-gold)', color: 'var(--bg-primary)' }} aria-busy={submitting}>
+                <motion.button type="submit" disabled={submitting} whileHover={!submitting ? { scale: 1.03, y: -2, boxShadow: '0 14px 40px rgba(177,31,38,0.28)' } : {}} whileTap={!submitting ? { scale: 0.97 } : {}} className="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-sans text-[11px] tracking-[0.26em] uppercase font-medium transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--accent-gold)]" style={{ background: 'var(--accent-gold)', color: 'var(--bg-primary)' }} aria-busy={submitting}>
                   {submitting ? (
                     <>
                       <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="w-4 h-4 border-2 border-current border-t-transparent rounded-full inline-block" aria-hidden="true" />

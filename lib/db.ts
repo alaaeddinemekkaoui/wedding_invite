@@ -27,8 +27,14 @@ async function ensureDatabaseSchema() {
           name VARCHAR(200) NOT NULL,
           phone VARCHAR(30) NOT NULL,
           guest_count INTEGER NOT NULL DEFAULT 0,
+          message TEXT,
           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
+      `
+
+      await sql`
+        ALTER TABLE rsvp
+        ADD COLUMN IF NOT EXISTS message TEXT
       `
 
       await sql`
@@ -57,20 +63,22 @@ export interface RSVPRow {
   name: string
   phone: string
   guest_count: number
+  message: string | null
   created_at: string
 }
 
 export async function insertRSVP(
   name: string,
   phone: string,
-  guestCount: number
+  guestCount: number,
+  message?: string
 ): Promise<RSVPRow> {
   await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
-    INSERT INTO rsvp (name, phone, guest_count)
-    VALUES (${name}, ${phone}, ${guestCount})
-    RETURNING id, name, phone, guest_count, created_at
+    INSERT INTO rsvp (name, phone, guest_count, message)
+    VALUES (${name}, ${phone}, ${guestCount}, ${message || null})
+    RETURNING id, name, phone, guest_count, message, created_at
   `
   return rows[0] as RSVPRow
 }
@@ -79,7 +87,7 @@ export async function getAllRSVPs(): Promise<RSVPRow[]> {
   await ensureDatabaseSchema()
   const sql = getDb()
   const rows = await sql`
-    SELECT id, name, phone, guest_count, created_at
+    SELECT id, name, phone, guest_count, message, created_at
     FROM rsvp
     ORDER BY created_at DESC
   `

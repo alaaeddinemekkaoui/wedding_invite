@@ -47,12 +47,12 @@ export default function Navbar() {
             : {}
         }
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 relative flex items-center justify-end md:justify-between">
           <motion.a
             href="#accueil"
             onClick={(e) => handleLink(e, '#accueil')}
             whileHover={{ scale: 1.04 }}
-            className="inline-flex min-h-[2.5rem] items-center justify-center px-1.5 py-1 font-script leading-[1.15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded"
+            className="absolute left-1/2 top-1/2 inline-flex min-h-[2.5rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center px-1.5 py-1 font-script leading-[1.15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded"
             aria-label="Accueil — Ghita ♡ Walid"
             style={{ color: 'var(--accent-gold)', textShadow: '0 2px 12px rgba(201, 169, 110, 0.12)' }}
           >
