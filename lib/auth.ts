@@ -16,7 +16,14 @@ function getAdminPassword(): string {
 }
 
 function getSessionSecret(): string {
-  return process.env.SESSION_SECRET || 'default-dev-secret-change-in-production-please'
+  const secret = process.env.SESSION_SECRET
+  if (!secret && process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'SESSION_SECRET environment variable is not set. ' +
+        'Please add it to your .env.local or Vercel environment variables.'
+    )
+  }
+  return secret || 'default-dev-secret-change-in-production-please'
 }
 
 function signToken(payload: string): string {
