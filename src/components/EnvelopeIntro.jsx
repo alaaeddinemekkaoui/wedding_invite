@@ -13,7 +13,7 @@ export default function EnvelopeIntro({ onOpen }) {
     setIsOpening(true)
     timeoutRef.current = window.setTimeout(() => {
       onOpen?.()
-    }, 5000)
+    }, 2000)
   }
 
   useEffect(() => {
@@ -109,7 +109,17 @@ export default function EnvelopeIntro({ onOpen }) {
                   className="mt-3 font-script text-[1.8rem] leading-none sm:text-[3rem]"
                   style={{ color: '#8b6532' }}
                 >
-                  {config.couple.name1} &amp; {config.couple.name2}
+                  <span>{config.couple.name1}</span>
+                  <span className="inline-flex px-2 align-middle">
+                    <Heart
+                      size={16}
+                      strokeWidth={1.9}
+                      style={{ color: '#8b6532' }}
+                      fill="none"
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span>{config.couple.name2}</span>
                 </p>
                 <div
                   className="mx-auto mt-4 h-px w-[82%]"

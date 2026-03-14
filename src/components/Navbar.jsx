@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Heart } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import { config } from '../data/config'
 
@@ -61,10 +61,25 @@ export default function Navbar({ theme, toggleTheme }) {
             href="#accueil"
             onClick={(e) => handleLink(e, '#accueil')}
             whileHover={{ scale: 1.04 }}
-            className="inline-flex items-center justify-center font-script text-[1.95rem] leading-[1.15] px-1.5 py-1 text-gradient-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded"
+            className="inline-flex min-h-[2.5rem] items-center justify-center px-1.5 py-1 font-script leading-[1.15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] rounded"
             aria-label="Accueil — Ghita × Walid"
+            style={{
+              color: 'var(--accent-gold)',
+              textShadow: '0 2px 12px rgba(201, 169, 110, 0.12)',
+            }}
           >
-            G × W
+            <span className="flex items-center gap-2 text-[1.85rem] sm:text-[1.95rem]">
+              <span>G</span>
+              <Heart
+                size={15}
+                strokeWidth={1.9}
+                className="translate-y-[1px]"
+                style={{ color: 'var(--accent-gold)' }}
+                fill="none"
+                aria-hidden="true"
+              />
+              <span>W</span>
+            </span>
           </motion.a>
 
           {/* Desktop navigation */}
