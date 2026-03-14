@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Phone, Users, MessageSquare, CalendarDays, RefreshCw } from 'lucide-react'
+import { ArrowLeft, Phone, MessageSquare, CalendarDays, RefreshCw } from 'lucide-react'
 
 function formatDate(value) {
   try {
@@ -122,25 +122,12 @@ export default function ListPage() {
                       #{item.id}
                     </p>
                   </div>
-                  <div
-                    className="rounded-full px-3 py-1.5 text-xs font-sans uppercase tracking-[0.22em]"
-                    style={{
-                      background: 'rgba(201, 169, 110, 0.12)',
-                      color: 'var(--accent-gold-dark)',
-                    }}
-                  >
-                    {item.guests} people
-                  </div>
                 </div>
 
                 <div className="space-y-3 text-sm">
                   <p className="flex items-center gap-3" style={{ color: 'var(--text-secondary)' }}>
                     <Phone size={16} />
                     <span>{item.phone}</span>
-                  </p>
-                  <p className="flex items-center gap-3" style={{ color: 'var(--text-secondary)' }}>
-                    <Users size={16} />
-                    <span>{item.guests} total guest{item.guests > 1 ? 's' : ''}</span>
                   </p>
                   <p className="flex items-center gap-3" style={{ color: 'var(--text-secondary)' }}>
                     <CalendarDays size={16} />

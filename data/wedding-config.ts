@@ -83,7 +83,6 @@ export const config = {
     fields: {
       name: 'Votre nom',
       phone: 'Votre numero de telephone',
-      guests: 'Nombre de personnes qui vous accompagneront',
       message: 'Message pour les maries (optionnel)',
     },
     message:

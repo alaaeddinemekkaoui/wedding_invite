@@ -44,14 +44,16 @@ export function validateRSVP(data: unknown): {
   // Guest count validation
   const guestRaw = body.guest_count
   const guestCount =
-    typeof guestRaw === 'number'
-      ? guestRaw
-      : typeof guestRaw === 'string'
-        ? parseInt(guestRaw, 10)
-        : NaN
+    typeof guestRaw === 'undefined'
+      ? 0
+      : typeof guestRaw === 'number'
+        ? guestRaw
+        : typeof guestRaw === 'string'
+          ? parseInt(guestRaw, 10)
+          : NaN
 
   if (isNaN(guestCount) || guestCount < 0) {
-    errors.push({ field: 'guest_count', message: 'Le nombre d\'accompagnants est requis' })
+    errors.push({ field: 'guest_count', message: 'Le nombre d\'accompagnants est invalide' })
   } else if (guestCount > 50) {
     errors.push({ field: 'guest_count', message: 'Maximum 50 accompagnants' })
   }

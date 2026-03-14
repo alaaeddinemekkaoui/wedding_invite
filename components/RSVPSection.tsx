@@ -8,14 +8,12 @@ import { config } from '@/data/wedding-config'
 interface FormData {
   name: string
   phone: string
-  guest_count: string
   message: string
 }
 
 interface FormErrors {
   name?: string
   phone?: string
-  guest_count?: string
   message?: string
 }
 
@@ -109,7 +107,7 @@ function SuccessState() {
 
 export default function RSVPSection() {
   const { rsvp } = config
-  const [form, setForm] = useState<FormData>({ name: '', phone: '', guest_count: '0', message: '' })
+  const [form, setForm] = useState<FormData>({ name: '', phone: '', message: '' })
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -123,10 +121,6 @@ export default function RSVPSection() {
 
     if (!form.phone.trim()) next.phone = 'Veuillez entrer votre numero de telephone'
     else if (!/^[+\d\s\-()]{7,}$/.test(form.phone.trim())) next.phone = 'Numero de telephone invalide'
-
-    const guestCount = parseInt(form.guest_count, 10)
-    if (isNaN(guestCount) || guestCount < 0) next.guest_count = 'Nombre invalide'
-    else if (guestCount > 50) next.guest_count = 'Maximum 50 accompagnants'
 
     if (form.message.trim().length > 1000) next.message = 'Le message est trop long'
 
@@ -161,7 +155,7 @@ export default function RSVPSection() {
         body: JSON.stringify({
           name: form.name.trim(),
           phone: form.phone.trim(),
-          guest_count: parseInt(form.guest_count, 10),
+          guest_count: 0,
           message: form.message.trim(),
         }),
       })
@@ -208,10 +202,6 @@ export default function RSVPSection() {
 
                 <Field label={rsvp.fields.phone} error={errors.phone}>
                   <StyledInput id="rsvp-phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+212 6 00 00 00 00" autoComplete="tel" hasError={!!errors.phone} aria-required="true" aria-invalid={!!errors.phone} />
-                </Field>
-
-                <Field label={rsvp.fields.guests} error={errors.guest_count}>
-                  <StyledInput id="rsvp-guest_count" type="number" name="guest_count" value={form.guest_count} onChange={handleChange} min="0" max="50" hasError={!!errors.guest_count} aria-required="true" aria-invalid={!!errors.guest_count} />
                 </Field>
 
                 <Field label={rsvp.fields.message} error={errors.message}>
