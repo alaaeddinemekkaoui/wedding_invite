@@ -11,20 +11,35 @@ import WelcomeMessage from './components/WelcomeMessage'
 import FooterSection from './components/FooterSection'
 import DecorativeDivider from './components/DecorativeDivider'
 import EnvelopeIntro from './components/EnvelopeIntro'
+import RSVPSection from './components/RSVPSection'
+import ListPage from './components/ListPage'
 
 function App() {
   const { theme, toggleTheme } = useTheme()
   const [invitationOpened, setInvitationOpened] = useState(false)
   const [startSection, setStartSection] = useState(null)
+  const [pathname, setPathname] = useState(window.location.pathname)
+  const isListPage = pathname === '/list'
 
   useEffect(() => {
+    const handlePopState = () => {
+      setPathname(window.location.pathname)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  useEffect(() => {
+    if (isListPage) return undefined
+
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = invitationOpened ? '' : 'hidden'
 
     return () => {
       document.body.style.overflow = previousOverflow
     }
-  }, [invitationOpened])
+  }, [invitationOpened, isListPage])
 
   useEffect(() => {
     if (!invitationOpened || !startSection) return
@@ -35,6 +50,10 @@ function App() {
 
     return () => window.clearTimeout(timer)
   }, [invitationOpened, startSection])
+
+  if (isListPage) {
+    return <ListPage />
+  }
 
   return (
     <>
@@ -64,6 +83,8 @@ function App() {
             <LocationSection />
             <DecorativeDivider />
             <WelcomeMessage />
+            <DecorativeDivider />
+            <RSVPSection />
           </main>
           <FooterSection />
         </>

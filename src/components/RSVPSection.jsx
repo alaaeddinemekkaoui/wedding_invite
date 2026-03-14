@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle2, Send, User, Phone, Users, MessageSquare } from 'lucide-react'
+import { CheckCircle2, Send } from 'lucide-react'
 import { config } from '../data/config'
 
 function Field({ label, error, children }) {
@@ -46,6 +46,7 @@ const inputBase = {
 
 function StyledInput({ hasError, ...props }) {
   const [focused, setFocused] = useState(false)
+
   return (
     <input
       {...props}
@@ -54,14 +55,21 @@ function StyledInput({ hasError, ...props }) {
         borderColor: hasError ? 'var(--accent-blush)' : focused ? 'var(--accent-gold)' : 'var(--border-color)',
         boxShadow: focused ? '0 0 0 3px rgba(201, 169, 110, 0.12)' : 'none',
       }}
-      onFocus={(e) => { setFocused(true); props.onFocus?.(e) }}
-      onBlur={(e) => { setFocused(false); props.onBlur?.(e) }}
+      onFocus={(e) => {
+        setFocused(true)
+        props.onFocus?.(e)
+      }}
+      onBlur={(e) => {
+        setFocused(false)
+        props.onBlur?.(e)
+      }}
     />
   )
 }
 
 function StyledTextarea({ hasError, ...props }) {
   const [focused, setFocused] = useState(false)
+
   return (
     <textarea
       {...props}
@@ -73,34 +81,15 @@ function StyledTextarea({ hasError, ...props }) {
         borderColor: hasError ? 'var(--accent-blush)' : focused ? 'var(--accent-gold)' : 'var(--border-color)',
         boxShadow: focused ? '0 0 0 3px rgba(201, 169, 110, 0.12)' : 'none',
       }}
-      onFocus={(e) => { setFocused(true); props.onFocus?.(e) }}
-      onBlur={(e) => { setFocused(false); props.onBlur?.(e) }}
-    />
-  )
-}
-
-function StyledSelect({ hasError, children, ...props }) {
-  const [focused, setFocused] = useState(false)
-  return (
-    <select
-      {...props}
-      style={{
-        ...inputBase,
-        appearance: 'none',
-        WebkitAppearance: 'none',
-        cursor: 'pointer',
-        borderColor: hasError ? 'var(--accent-blush)' : focused ? 'var(--accent-gold)' : 'var(--border-color)',
-        boxShadow: focused ? '0 0 0 3px rgba(201, 169, 110, 0.12)' : 'none',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4L6 8L10 4' stroke='%23C9A96E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'right 14px center',
-        paddingRight: '36px',
+      onFocus={(e) => {
+        setFocused(true)
+        props.onFocus?.(e)
       }}
-      onFocus={(e) => { setFocused(true); props.onFocus?.(e) }}
-      onBlur={(e) => { setFocused(false); props.onBlur?.(e) }}
-    >
-      {children}
-    </select>
+      onBlur={(e) => {
+        setFocused(false)
+        props.onBlur?.(e)
+      }}
+    />
   )
 }
 
@@ -138,33 +127,31 @@ function SuccessState() {
   )
 }
 
-export default function RSVPSection() {
+export function RSVPFormCard({ formIdPrefix = 'rsvp', onSuccess }) {
   const { rsvp } = config
-
   const [form, setForm] = useState({
     name: '',
     phone: '',
     guests: '1',
-    attending: '',
     message: '',
   })
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const validate = () => {
     const next = {}
+
     if (!form.name.trim()) next.name = 'Veuillez entrer votre nom complet'
     else if (form.name.trim().length < 2) next.name = 'Nom trop court'
 
-    if (!form.phone.trim()) next.phone = 'Veuillez entrer votre numéro de téléphone'
-    else if (!/^[+\d\s\-()]{7,}$/.test(form.phone.trim())) next.phone = 'Numéro de téléphone invalide'
+    if (!form.phone.trim()) next.phone = 'Veuillez entrer votre numero de telephone'
+    else if (!/^[+\d\s\-()]{7,}$/.test(form.phone.trim())) next.phone = 'Numero de telephone invalide'
 
-    const g = parseInt(form.guests, 10)
-    if (!form.guests || isNaN(g) || g < 1) next.guests = 'Minimum 1 invité'
-    else if (g > 20) next.guests = 'Maximum 20 invités'
-
-    if (!form.attending) next.attending = 'Veuillez indiquer votre présence'
+    const guestCount = parseInt(form.guests, 10)
+    if (!form.guests || Number.isNaN(guestCount) || guestCount < 1) next.guests = 'Minimum 1 invite'
+    else if (guestCount > 20) next.guests = 'Maximum 20 invites'
 
     return next
   }
@@ -172,41 +159,217 @@ export default function RSVPSection() {
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }))
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }))
+    }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     const validationErrors = validate()
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
-      // Focus first error field
+      setSubmitError('')
       const firstKey = Object.keys(validationErrors)[0]
-      document.getElementById(`rsvp-${firstKey}`)?.focus()
+      document.getElementById(`${formIdPrefix}-${firstKey}`)?.focus()
       return
     }
 
     setSubmitting(true)
+    setSubmitError('')
 
-    // ── To connect to a real backend, replace this block: ──────────────
-    // await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(form),
-    // })
-    // ────────────────────────────────────────────────────────────────────
+    try {
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          guests: parseInt(form.guests, 10),
+          message: form.message.trim(),
+        }),
+      })
 
-    // Simulate async submission
-    await new Promise((resolve) => setTimeout(resolve, 1200))
+      const data = await response.json().catch(() => ({}))
 
-    setSubmitting(false)
-    setSubmitted(true)
+      if (!response.ok) {
+        throw new Error(data.error || 'Impossible d\'enregistrer votre confirmation.')
+      }
+
+      setSubmitted(true)
+      onSuccess?.(form)
+    } catch (error) {
+      setSubmitError(error.message || 'Une erreur est survenue.')
+    } finally {
+      setSubmitting(false)
+    }
   }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ delay: 0.1, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-3xl overflow-hidden"
+      style={{
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-gold)',
+        boxShadow: 'var(--shadow-card)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+    >
+      <AnimatePresence mode="wait">
+        {submitted ? (
+          <SuccessState key="success" />
+        ) : (
+          <motion.form
+            key="form"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.3 }}
+            onSubmit={handleSubmit}
+            noValidate
+            className="p-5 sm:p-7 md:p-10 flex flex-col gap-5 sm:gap-6"
+            aria-label="Formulaire de confirmation de presence"
+          >
+            <div
+              className="h-[2px] -mx-5 sm:-mx-7 md:-mx-10 -mt-5 sm:-mt-7 md:-mt-10 mb-2"
+              style={{
+                background: 'linear-gradient(90deg, transparent, var(--accent-gold), var(--accent-gold-light), var(--accent-gold), transparent)',
+              }}
+              aria-hidden="true"
+            />
+
+            <Field label={rsvp.fields.name} error={errors.name}>
+              <StyledInput
+                id={`${formIdPrefix}-name`}
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Votre nom complet"
+                autoComplete="name"
+                hasError={!!errors.name}
+                aria-required="true"
+                aria-invalid={!!errors.name}
+              />
+            </Field>
+
+            <Field label={rsvp.fields.phone} error={errors.phone}>
+              <StyledInput
+                id={`${formIdPrefix}-phone`}
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="+212 6 00 00 00 00"
+                autoComplete="tel"
+                hasError={!!errors.phone}
+                aria-required="true"
+                aria-invalid={!!errors.phone}
+              />
+            </Field>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+              <Field label={rsvp.fields.guests} error={errors.guests}>
+                <StyledInput
+                  id={`${formIdPrefix}-guests`}
+                  type="number"
+                  name="guests"
+                  value={form.guests}
+                  onChange={handleChange}
+                  min="1"
+                  max="20"
+                  hasError={!!errors.guests}
+                  aria-required="true"
+                  aria-invalid={!!errors.guests}
+                />
+              </Field>
+
+              <div
+                className="rounded-2xl px-4 py-3 flex items-center"
+                style={{
+                  background: 'rgba(201, 169, 110, 0.08)',
+                  border: '1px solid rgba(201, 169, 110, 0.22)',
+                }}
+              >
+                <p className="font-serif italic text-sm sm:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Votre presence sera confirmee des que vous envoyez ce formulaire.
+                </p>
+              </div>
+            </div>
+
+            <Field label={rsvp.fields.message} error={errors.message}>
+              <StyledTextarea
+                id={`${formIdPrefix}-message`}
+                name="message"
+                value={form.message}
+                onChange={handleChange}
+                placeholder="Un message pour les maries... (optionnel)"
+                hasError={!!errors.message}
+              />
+            </Field>
+
+            <AnimatePresence>
+              {submitError && (
+                <motion.p
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  className="font-sans text-sm"
+                  style={{ color: 'var(--accent-blush)' }}
+                  role="alert"
+                >
+                  {submitError}
+                </motion.p>
+              )}
+            </AnimatePresence>
+
+            <motion.button
+              type="submit"
+              disabled={submitting}
+              whileHover={!submitting ? { scale: 1.03, y: -2, boxShadow: '0 14px 40px rgba(201,169,110,0.35)' } : {}}
+              whileTap={!submitting ? { scale: 0.97 } : {}}
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 sm:px-8 py-4 rounded-full font-sans text-[11px] tracking-[0.22em] sm:tracking-[0.26em] uppercase font-medium transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--accent-gold)]"
+              style={{ background: 'var(--accent-gold)', color: 'var(--bg-primary)' }}
+              aria-busy={submitting}
+            >
+              {submitting ? (
+                <>
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    className="w-4 h-4 border-2 border-current border-t-transparent rounded-full inline-block"
+                    aria-hidden="true"
+                  />
+                  {rsvp.submittingLabel}
+                </>
+              ) : (
+                <>
+                  <Send size={14} strokeWidth={2} aria-hidden="true" />
+                  {rsvp.submitLabel}
+                </>
+              )}
+            </motion.button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+export default function RSVPSection() {
+  const { rsvp } = config
 
   return (
     <section id="rsvp" className="section-padding px-6" aria-labelledby="rsvp-heading">
       <div className="max-w-2xl mx-auto">
-        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -232,157 +395,7 @@ export default function RSVPSection() {
           </p>
         </motion.div>
 
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ delay: 0.1, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-3xl overflow-hidden"
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-gold)',
-            boxShadow: 'var(--shadow-card)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {submitted ? (
-              <SuccessState key="success" />
-            ) : (
-              <motion.form
-                key="form"
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.3 }}
-                onSubmit={handleSubmit}
-                noValidate
-                className="p-8 md:p-10 flex flex-col gap-6"
-                aria-label="Formulaire de confirmation de présence"
-              >
-                {/* Gold top accent */}
-                <div
-                  className="h-[2px] -mx-8 md:-mx-10 -mt-8 md:-mt-10 mb-2"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent, var(--accent-gold), var(--accent-gold-light), var(--accent-gold), transparent)',
-                  }}
-                  aria-hidden="true"
-                />
-
-                {/* Name */}
-                <Field label={rsvp.fields.name} error={errors.name}>
-                  <div className="relative">
-                    <StyledInput
-                      id="rsvp-name"
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Votre nom complet"
-                      autoComplete="name"
-                      hasError={!!errors.name}
-                      aria-required="true"
-                      aria-invalid={!!errors.name}
-                      aria-describedby={errors.name ? 'rsvp-name-error' : undefined}
-                    />
-                  </div>
-                </Field>
-
-                {/* Phone */}
-                <Field label={rsvp.fields.phone} error={errors.phone}>
-                  <StyledInput
-                    id="rsvp-phone"
-                    type="tel"
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="+212 6 00 00 00 00"
-                    autoComplete="tel"
-                    hasError={!!errors.phone}
-                    aria-required="true"
-                    aria-invalid={!!errors.phone}
-                  />
-                </Field>
-
-                {/* Guests & Attending — two columns */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <Field label={rsvp.fields.guests} error={errors.guests}>
-                    <StyledInput
-                      id="rsvp-guests"
-                      type="number"
-                      name="guests"
-                      value={form.guests}
-                      onChange={handleChange}
-                      min="1"
-                      max="20"
-                      hasError={!!errors.guests}
-                      aria-required="true"
-                      aria-invalid={!!errors.guests}
-                    />
-                  </Field>
-
-                  <Field label={rsvp.fields.attending} error={errors.attending}>
-                    <StyledSelect
-                      id="rsvp-attending"
-                      name="attending"
-                      value={form.attending}
-                      onChange={handleChange}
-                      hasError={!!errors.attending}
-                      aria-required="true"
-                      aria-invalid={!!errors.attending}
-                    >
-                      <option value="" disabled>Choisir…</option>
-                      {rsvp.attendingOptions.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </StyledSelect>
-                  </Field>
-                </div>
-
-                {/* Message */}
-                <Field label={rsvp.fields.message} error={errors.message}>
-                  <StyledTextarea
-                    id="rsvp-message"
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder="Un message pour les mariés… (optionnel)"
-                    hasError={!!errors.message}
-                  />
-                </Field>
-
-                {/* Submit */}
-                <motion.button
-                  type="submit"
-                  disabled={submitting}
-                  whileHover={!submitting ? { scale: 1.03, y: -2, boxShadow: '0 14px 40px rgba(201,169,110,0.35)' } : {}}
-                  whileTap={!submitting ? { scale: 0.97 } : {}}
-                  className="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-sans text-[11px] tracking-[0.26em] uppercase font-medium transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--accent-gold)]"
-                  style={{ background: 'var(--accent-gold)', color: 'var(--bg-primary)' }}
-                  aria-busy={submitting}
-                >
-                  {submitting ? (
-                    <>
-                      <motion.span
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                        className="w-4 h-4 border-2 border-current border-t-transparent rounded-full inline-block"
-                        aria-hidden="true"
-                      />
-                      {rsvp.submittingLabel}
-                    </>
-                  ) : (
-                    <>
-                      <Send size={14} strokeWidth={2} aria-hidden="true" />
-                      {rsvp.submitLabel}
-                    </>
-                  )}
-                </motion.button>
-              </motion.form>
-            )}
-          </AnimatePresence>
-        </motion.div>
+        <RSVPFormCard />
       </div>
     </section>
   )

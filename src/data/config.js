@@ -129,11 +129,9 @@ export const config = {
     fields: {
       name: 'Nom complet',
       phone: 'Téléphone',
-      guests: 'Nombre d\'invités',
-      attending: 'Présence',
+      guests: 'Nombre total de personnes',
       message: 'Message (optionnel)',
     },
-    attendingOptions: ['Oui, avec grand plaisir', 'Non, malheureusement'],
     submitLabel: 'Confirmer',
     submittingLabel: 'Envoi en cours…',
     successHeading: 'Merci !',
