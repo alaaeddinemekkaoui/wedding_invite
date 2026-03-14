@@ -1,186 +1,296 @@
-# Ghita × Walid — Luxury Wedding Invitation
+# 💍 Ghita × Walid — Luxury Wedding Invitation
 
-A cinematic, luxury static wedding invitation microsite built with **React + Vite + Tailwind CSS + Framer Motion**.
+A **full-stack luxury wedding invitation web app** built with Next.js, TypeScript, Tailwind CSS, Framer Motion, and PostgreSQL. Production-ready and deployable directly to Vercel.
 
-## Features
-
-- Full dark / light mode (auto-detects system preference, persists in localStorage)
-- Animated preloader, scroll progress bar, and section reveals
-- Live countdown to the wedding day
-- Stylised venue map card with Google Maps link
-- Elegant welcome message section
-- Fully responsive — mobile, tablet, desktop
-- All content editable from a single config file: `src/data/config.js`
-- Zero backend — fully static, deployable on Vercel or GitHub Pages
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?logo=tailwindcss)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169e1?logo=postgresql)
 
 ---
 
-## Quick start (local development)
+## ✨ Features
+
+- **Public invitation page** — elegant, animated, mobile-first
+- **RSVP confirmation form** — connected to PostgreSQL
+- **Protected admin dashboard** — login, RSVP table, stats, CSV export
+- **Dark mode / Light mode** — toggle with system preference detection
+- **Framer Motion animations** — smooth, premium micro-interactions
+- **Moroccan-inspired design** — subtle geometric ornaments, gold accents
+- **Fully responsive** — mobile, tablet, desktop
+- **Accessible** — semantic HTML, ARIA labels, focus states
+- **Vercel-ready** — serverless API routes, Neon Postgres integration
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Framework | [Next.js 15](https://nextjs.org/) (App Router) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| Styling | [Tailwind CSS 3.4](https://tailwindcss.com/) |
+| Animations | [Framer Motion 11](https://www.framer.com/motion/) |
+| Icons | [Lucide React](https://lucide.dev/) |
+| Database | [Neon Postgres](https://neon.tech/) (`@neondatabase/serverless`) |
+| Auth | Cookie-based session with HMAC signing |
+| Deployment | [Vercel](https://vercel.com/) |
+
+---
+
+## 📁 Folder Structure
+
+```
+├── app/
+│   ├── page.tsx                 # Public invitation page
+│   ├── layout.tsx               # Root layout with metadata
+│   ├── globals.css              # Theme variables & global styles
+│   ├── admin/
+│   │   └── page.tsx             # Protected admin dashboard
+│   └── api/
+│       ├── rsvp/route.ts        # POST: save RSVP / GET: list RSVPs (admin)
+│       ├── stats/route.ts       # GET: admin statistics
+│       └── admin/
+│           ├── login/route.ts   # POST: admin login
+│           └── logout/route.ts  # POST: admin logout
+├── components/
+│   ├── Navbar.tsx               # Sticky translucent navbar
+│   ├── ThemeProvider.tsx        # Dark/light theme context
+│   ├── ThemeToggle.tsx          # Theme switch button
+│   ├── HeroSection.tsx          # Hero with animated names
+│   ├── CoupleSection.tsx        # Couple introduction cards
+│   ├── DetailsSection.tsx       # Wedding detail cards
+│   ├── CountdownSection.tsx     # Live countdown timer
+│   ├── ProgramSection.tsx       # Event timeline
+│   ├── LocationSection.tsx      # Venue card + map placeholder
+│   ├── RSVPSection.tsx          # RSVP confirmation form
+│   ├── FooterSection.tsx        # Footer with closing message
+│   ├── DecorativeDivider.tsx    # Section divider ornament
+│   ├── AdminLogin.tsx           # Admin login form
+│   └── AdminDashboard.tsx       # Admin dashboard with table
+├── data/
+│   └── wedding-config.ts        # All editable wedding content
+├── lib/
+│   ├── db.ts                    # Neon Postgres database helpers
+│   ├── auth.ts                  # Admin session auth (cookie + HMAC)
+│   ├── validators.ts            # RSVP input validation
+│   └── utils.ts                 # Utility functions (cn)
+├── schema/
+│   └── init.sql                 # PostgreSQL table schema
+├── .env.example                 # Environment variable template
+├── next.config.js               # Next.js configuration
+├── tailwind.config.ts           # Tailwind CSS configuration
+├── tsconfig.json                # TypeScript configuration
+└── package.json                 # Dependencies & scripts
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js 18+** (recommended: 20+)
+- **npm** or **yarn**
+- A **Neon Postgres** database (free tier works)
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/alaaeddinemekkaoui/wedding_invite.git
+cd wedding_invite
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
+```
+
+### 3. Set up environment variables
+
+Copy the example file and fill in your values:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local`:
+
+```env
+DATABASE_URL=postgresql://user:password@your-neon-host/database?sslmode=require
+ADMIN_PASSWORD=your-secure-admin-password
+SESSION_SECRET=change-this-to-a-random-string-at-least-32-chars
+```
+
+### 4. Set up the database
+
+Run the SQL schema on your Neon database:
+
+```sql
+-- Copy and paste schema/init.sql into the Neon SQL Editor
+CREATE TABLE IF NOT EXISTS rsvp (
+  id          SERIAL PRIMARY KEY,
+  name        VARCHAR(200)  NOT NULL,
+  phone       VARCHAR(30)   NOT NULL,
+  guest_count INTEGER       NOT NULL DEFAULT 0,
+  created_at  TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_rsvp_created_at ON rsvp (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_rsvp_name ON rsvp (name);
+```
+
+### 5. Run locally
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:5173/](http://localhost:5173/)
+Open [http://localhost:3000](http://localhost:3000) for the invitation page.
+Open [http://localhost:3000/admin](http://localhost:3000/admin) for the admin dashboard.
 
----
-
-## Customise content
-
-Edit **`src/data/config.js`** — everything (names, date, venue, nav links, welcome text, map link, and event details) lives there. No other file needs to change to adapt this for a different couple.
-
----
-
-## Build for production
+### 6. Build for production
 
 ```bash
 npm run build
+npm start
 ```
-
-Output is placed in `dist/`.
 
 ---
 
-## Which deployment is better?
+## 🔑 Admin Dashboard
 
-For **this app**, **Vercel is the better option**.
+Navigate to `/admin` and enter the password set in `ADMIN_PASSWORD`.
 
-### Why Vercel is better here
+### Features
 
-- easiest deployment flow
-- no repository subfolder/base-path headaches
-- automatic HTTPS
-- instant preview deployments on every push
-- better custom domain experience
-
-### When GitHub Pages is still a good choice
-
-Use GitHub Pages if you want:
-
-- the simplest free hosting tied directly to a GitHub repo
-- no extra platform account beyond GitHub
-- a basic static deployment that rarely changes
+- **Total confirmations** — count of all RSVPs
+- **Total guests** — sum of all accompanying persons
+- **Searchable table** — filter by name or phone
+- **CSV export** — download all RSVPs as a CSV file
+- **Delete entries** — remove individual RSVPs
+- **Logout** — secure session termination
 
 ---
 
-## Deploy to Vercel (recommended)
+## 🎨 Customizing Wedding Content
 
-### Option 1: Dashboard import
+All wedding-specific content is in a **single configuration file**:
 
-1. Push this project to GitHub.
-2. Go to Vercel.
-3. Click **Add New → Project**.
-4. Import your GitHub repository.
-5. Framework preset: **Vite**.
-6. Build command: `npm run build`
-7. Output directory: `dist`
-8. Deploy.
-
-No extra config is required for Vercel.
-
-### Option 2: Vercel CLI
-
-```bash
-npm install -g vercel
-vercel
+```
+data/wedding-config.ts
 ```
 
-Follow the prompts and deploy.
+Edit this file to change:
+
+- **Couple names** — `couple.name1`, `couple.name2`
+- **Wedding date** — `wedding.date`, `wedding.dateISO`
+- **Venue** — `wedding.venue`, `wedding.city`, `wedding.fullVenue`
+- **Hero text** — `hero.subtitle`
+- **Couple bios** — `coupleSection.ghita`, `coupleSection.walid`
+- **Event schedule** — `program.items` array
+- **Venue description** — `location.description`
+- **Google Maps link** — `location.mapLink`
+- **RSVP message** — `rsvp.message`
+- **All French labels** — navbar, sections, buttons, footer
+
+This makes it easy to reuse the project for another wedding.
 
 ---
 
-## Deploy to GitHub Pages
+## 🌗 Theme System
 
-### 1. Create a GitHub repository
+- **Light mode** — ivory, champagne, warm beige, muted gold
+- **Dark mode** — deep emerald, charcoal, muted gold, warm ivory
+- Toggle in the navbar or system preference on first visit
+- Preference saved in `localStorage`
 
-Create a repository on GitHub (e.g. `wedding_invite`).
+---
 
-### 2. Build with the repository base path
+## ▲ Deploy to Vercel
 
-This project already supports a configurable base path. Build it with your repository name:
-
-```bash
-# PowerShell
-$env:VITE_BASE_PATH="/your-repo-name/"
-npm run build
-```
-
-Or in Command Prompt:
-
-```bat
-set VITE_BASE_PATH=/your-repo-name/
-npm run build
-```
-
-### 3. Push code
+### 1. Push to GitHub
 
 ```bash
-git init
 git add .
-git commit -m "initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/your-repo-name.git
-git push -u origin main
+git commit -m "Wedding invitation app"
+git push origin main
 ```
 
-### 4. Deploy the `dist` folder
+### 2. Import to Vercel
 
-You can deploy the built `dist` folder using a tool like `gh-pages`, or publish it from a GitHub Actions workflow.
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import your GitHub repository
+3. Vercel auto-detects Next.js — no configuration needed
 
-Example using `gh-pages`:
+### 3. Connect Neon Postgres
 
-```bash
-npm install --save-dev gh-pages
-```
+1. Go to [neon.tech](https://neon.tech) and create a free database
+2. Copy the connection string
+3. In Vercel → Project Settings → Environment Variables, add:
 
-Add these two scripts to `package.json`:
+| Variable | Value |
+| --- | --- |
+| `DATABASE_URL` | `postgresql://user:pass@host/db?sslmode=require` |
+| `ADMIN_PASSWORD` | Your chosen admin password |
+| `SESSION_SECRET` | A random string (min 32 characters) |
 
-```json
-"predeploy": "npm run build",
-"deploy": "gh-pages -d dist"
-```
+4. Run the SQL schema in Neon's SQL Editor (copy from `schema/init.sql`)
 
-Then run:
+### 4. Deploy
 
-```bash
-npm run deploy
-```
-
-### 5. Enable GitHub Pages
-
-In your repository go to **Settings → Pages**, set the source to the **`gh-pages` branch**, root folder. Your site will be live at:
-
-```
-https://YOUR_USERNAME.github.io/your-repo-name/
-```
+Vercel will automatically deploy on every push to `main`.
 
 ---
 
-## Project structure
+## 📱 Routes
 
-```
-src/
-├── App.jsx                    Main app shell
-├── main.jsx                   Entry point
-├── index.css                  Global styles & CSS variables (theming)
-├── data/
-│   └── config.js              ← Edit all content here
-├── hooks/
-│   ├── useTheme.js            Dark/light mode logic
-│   └── useCountdown.js        Live countdown timer
-└── components/
-    ├── Preloader.jsx
-    ├── ScrollProgress.jsx
-    ├── Navbar.jsx
-    ├── ThemeToggle.jsx
-    ├── HeroSection.jsx
-    ├── CoupleSection.jsx
-    ├── DetailsSection.jsx
-    ├── CountdownSection.jsx
-    ├── LocationSection.jsx
-  ├── WelcomeMessage.jsx
-    ├── FooterSection.jsx
-    ├── DecorativeDivider.jsx
-    └── MusicToggle.jsx
-```
+| Route | Type | Description |
+| --- | --- | --- |
+| `/` | Public | Wedding invitation page |
+| `/admin` | Protected | Admin dashboard (login required) |
+| `POST /api/rsvp` | API | Save RSVP submission |
+| `GET /api/rsvp` | API (admin) | List all RSVPs |
+| `GET /api/stats` | API (admin) | RSVP statistics |
+| `POST /api/admin/login` | API | Admin authentication |
+| `POST /api/admin/logout` | API | End admin session |
+
+---
+
+## 🔒 Security
+
+- Admin password stored in environment variable (never in code)
+- Session cookie: `httpOnly`, `secure` (in production), `sameSite: lax`
+- Session token signed with HMAC-SHA256
+- Timing-safe password comparison
+- Server-side input validation and sanitization
+- HTML injection prevention (strip `<` and `>` from inputs)
+
+---
+
+## ♿ Accessibility
+
+- Semantic HTML (`<header>`, `<main>`, `<nav>`, `<section>`, `<footer>`)
+- ARIA labels on interactive elements
+- Focus-visible outlines
+- Keyboard-accessible navigation
+- Good contrast in both themes
+- Respects `prefers-reduced-motion`
+
+---
+
+## 📜 Scripts
+
+| Script | Command |
+| --- | --- |
+| Development | `npm run dev` |
+| Build | `npm run build` |
+| Start | `npm start` |
+| Lint | `npm run lint` |
+
+---
+
+## 📄 License
+
+This project is private and intended for personal use. Feel free to fork and customize for your own wedding.
