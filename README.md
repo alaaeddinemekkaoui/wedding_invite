@@ -2,7 +2,7 @@
 
 A **full-stack luxury wedding invitation web app** built with Next.js, TypeScript, Tailwind CSS, Framer Motion, and PostgreSQL. Production-ready and deployable directly to Vercel.
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?logo=tailwindcss)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169e1?logo=postgresql)
@@ -27,7 +27,7 @@ A **full-stack luxury wedding invitation web app** built with Next.js, TypeScrip
 
 | Layer | Technology |
 | --- | --- |
-| Framework | [Next.js 14](https://nextjs.org/) (App Router) |
+| Framework | [Next.js 15](https://nextjs.org/) (App Router) |
 | Language | [TypeScript](https://www.typescriptlang.org/) |
 | Styling | [Tailwind CSS 3.4](https://tailwindcss.com/) |
 | Animations | [Framer Motion 11](https://www.framer.com/motion/) |
